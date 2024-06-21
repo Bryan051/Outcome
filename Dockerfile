@@ -5,7 +5,7 @@ FROM openjdk:17-jdk
 WORKDIR /app
 
 # JAR 파일을 복사합니다.
-COPY build/libs/Outcome-0.0.1-SNAPSHOT.jar app.jar
+COPY Outcome-0.0.1-SNAPSHOT.jar app.jar
 
 # 애플리케이션 포트를 노출합니다.
 EXPOSE 8080
