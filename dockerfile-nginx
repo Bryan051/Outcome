@@ -1,0 +1,5 @@
+# 기본 base image는 nginx로 그리고 /etc/nginx/conf.d에 아까 그 파일을 옮겨주려고합니다.
+# (이 경로가 nginx에서 지정한 설정파일경로입니다)
+FROM nginx
+
+COPY nginx.conf /etc/nginx/conf.d
