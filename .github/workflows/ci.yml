@@ -51,7 +51,9 @@ jobs:
       run: |
           echo "Gradle build completed!"
           ls -R ./build/libs  
-
+    # JAR 파일을 Docker 빌드 컨텍스트로 복사
+    - name: Copy JAR to root
+      run: cp build/libs/Outcome-0.0.1-SNAPSHOT.jar .
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v3
