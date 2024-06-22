@@ -88,7 +88,7 @@ jobs:
     runs-on: [aws-ec2]
     steps:
       - name: Pull Image from docker hub
-        run: docker pull iri051/app:latest
+        run: sudo docker pull iri051/app:latest
       - name: Delete old container
         run: docker rm -f spring-outcome-container
       - name: Run docker container
