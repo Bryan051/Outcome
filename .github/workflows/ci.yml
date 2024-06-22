@@ -23,6 +23,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0      # 전체 히스토리를 가져옵니다.
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
