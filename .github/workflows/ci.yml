@@ -77,7 +77,7 @@ jobs:
 #         여기서는 프로젝트 루트 디렉토리(context: .)를 빌드 컨텍스트로 설정합니다.
         context: .
         push: true
-        tags: user/app:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
         file: ./Dockerfile
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
