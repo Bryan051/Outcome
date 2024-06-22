@@ -36,9 +36,13 @@ jobs:
 
     # application properties 생성
     - uses: actions/checkout@v3
-    - run: touch ./src/main/resources/application.properties
-    - run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
-    - run: cat ./src/main/resources/application.properties
+      run: |
+        cd src/main
+        mkdir resources
+        cd resources
+        touch application.properties
+        echo "${{ secrets.APPLICATION_PROPERTIES }}">> application.properties
+      shell: bash
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
