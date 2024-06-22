@@ -23,8 +23,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0      # 전체 히스토리를 가져옵니다.
+#      with:
+#        fetch-depth: 0      # 전체 히스토리를 가져옵니다.
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -39,10 +39,10 @@ jobs:
     # application properties 생
     - name: application.properties
       run: |
-        cd src/main
+#        cd src/main
         mkdir resources
-        cd resources
-        touch application.properties
+#        cd resources
+#        touch application.properties
         echo "${{ secrets.APPLICATION_PROPERTIES }}">> application.properties
       shell: bash
 
@@ -73,8 +73,12 @@ jobs:
       name: Build and push
       uses: docker/build-push-action@v6
       with:
+#        Docker Build 컨텍스트 설정: Docker 빌드 컨텍스트가 올바르게 설정되었는지 확인합니다.
+#        여기서는 프로젝트 루트 디렉토리(context: .)를 빌드 컨텍스트로 설정합니다.
+        context: .
         push: true
         tags: user/app:latest
+        file: ./Dockerfile
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
