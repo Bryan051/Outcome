@@ -79,6 +79,18 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
         file: ./Dockerfile
+  deploy:
+    needs: build
+    # aws ec2 를 github-action runners 에 등록 해 둬서 엑세스 가능 하게 함
+    runs-on: [aws-ec2]
+    steps:
+      - name: Pull Image from docker hub
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+      - name: Delete old container
+        run: docker rm -f spring-outcome-container
+      - name: Run docker container
+        run: docker run -d -p 8080:8080 --name spring-outcome-container ${{ secrets.DOCKERHUB_USERNAME }}/app
+
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
@@ -109,6 +121,3 @@ jobs:
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
     
-#  deploy:
-#    needs: build
-#    runs-on:
