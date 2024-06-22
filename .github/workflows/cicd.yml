@@ -70,9 +70,23 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build docker image
-      run: docker build -t iri051/app .
+      run: docker build -t iri051/app:latest .
     - name: Publish image to docker hub
       run: docker push iri051/app:latest
+
+    - name: Ec2 docker-compose up
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{secrets.HOST}}
+        username: ubuntu
+        key: ${{secrets.KEYPAIR}}
+        script: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker compose down
+          docker rmi ${{ secrets.DOCKER_REPO }}:latest
+          docker pull ${{ secrets.DOCKER_REPO }}:latest
+          docker compose up -d
+          docker logout
 
 #      uses: docker/build-push-action@v6
 #      with:
@@ -82,17 +96,17 @@ jobs:
 #        push: true
 #        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
 #        file: ./Dockerfile
-  deploy:
-    needs: build
-    # aws ec2 를 github-action runners 에 등록 해 둬서 엑세스 가능 하게 함
-    runs-on: [aws-ec2]
-    steps:
-      - name: Pull Image from docker hub
-        run: sudo docker pull iri051/app:latest
-      - name: Delete old container
-        run: docker rm -f spring-outcome-container
-      - name: Run docker container
-        run: docker run -d -p 8080:8080 --name spring-outcome-container iri051/app
+#  deploy:
+#    needs: build
+#    # aws ec2 를 github-action runners 에 등록 해 둬서 엑세스 가능 하게 함
+#    runs-on: [aws-ec2]
+#    steps:
+#      - name: Pull Image from docker hub
+#        run: sudo docker pull iri051/app:latest
+#      - name: Delete old container
+#        run: docker rm -f spring-outcome-container
+#      - name: Run docker container
+#        run: docker run -d -p 8080:8080 --name spring-outcome-container iri051/app
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
