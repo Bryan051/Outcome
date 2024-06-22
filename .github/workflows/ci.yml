@@ -34,6 +34,11 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
+    - name: application properties 생성
+      run:
+        cd Bryan051/Outcome/src/main/resources
+        echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./application.properties
+
     - name: Build with Gradle Wrapper
       run: ./gradlew build --console=plain
     -
