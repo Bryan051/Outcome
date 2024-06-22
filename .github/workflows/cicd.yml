@@ -85,11 +85,11 @@ jobs:
     runs-on: [aws-ec2]
     steps:
       - name: Pull Image from docker hub
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+        run: docker pull iri051/app:latest
       - name: Delete old container
         run: docker rm -f spring-outcome-container
       - name: Run docker container
-        run: docker run -d -p 8080:8080 --name spring-outcome-container ${{ secrets.DOCKERHUB_USERNAME }}/app
+        run: docker run -d -p 8080:8080 --name spring-outcome-container iri051/app
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
