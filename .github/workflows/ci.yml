@@ -39,12 +39,11 @@ jobs:
     # application properties 생
     - name: application.properties
       run: |
-#        cd src/main
-#        mkdir resources
-#        cd resources
-#        touch application.properties
-        mkdir -p src/main/resources
-        echo "${{ secrets.APPLICATION_PROPERTIES }}">> src/main/resources/application.properties
+        cd src/main
+        mkdir resources
+        cd resources
+        touch application.properties
+        echo "${{ secrets.APPLICATION_PROPERTIES }}">> application.properties
       shell: bash
 
     - name: Build with Gradle Wrapper
@@ -75,7 +74,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
 #        Docker Build 컨텍스트 설정: Docker 빌드 컨텍스트가 올바르게 설정되었는지 확인합니다.
-#        여기서는 프로젝트 루트 디렉토리(context: .)를 빌드 컨텍스트로 설정합니다.
+#         여기서는 프로젝트 루트 디렉토리(context: .)를 빌드 컨텍스트로 설정합니다.
         context: .
         push: true
         tags: user/app:latest
