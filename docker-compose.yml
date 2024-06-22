@@ -13,9 +13,9 @@ services:
       MYSQL_USER: iri
       MYSQL_PASSWORD: 1234qwer
 
-  spring-boot-app:
-    image: outcomespring:1.0
-    container_name: spring-boot-container
+  spring-outcome:
+    image: iri051/app
+    container_name: spring-outcome
     ports:
       - "8080:8080"
     depends_on:
@@ -24,24 +24,28 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/outcome
       SPRING_DATASOURCE_USERNAME: iri
       SPRING_DATASOURCE_PASSWORD: 1234qwer
+#    volumes:
+#      - ./Outcome-0.0.1-SNAPSHOT.jar:/app/app.jar
+#    working_dir: /app
+#    command: [ "java", "-jar", "app.jar" ]
 
   web:
     container_name: web
-    image: iri051/web-nginx
+    image: nginx
     expose:
-#      - 8080
       - 80
+#      - 8080
 #    ports:
 #      - 8080:8080
 
   nginx:
     container_name: nginx
-    image: iri051/web-nginx
+    image: nginx
     ports:
       - 80:80
     depends_on:
       # 추가함
-      - spring-boot-app
+      - spring-outcome
       - web
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
