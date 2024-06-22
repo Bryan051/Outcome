@@ -69,16 +69,19 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    -
-      name: Build and push
-      uses: docker/build-push-action@v6
-      with:
-#        Docker Build 컨텍스트 설정: Docker 빌드 컨텍스트가 올바르게 설정되었는지 확인합니다.
-#         여기서는 프로젝트 루트 디렉토리(context: .)를 빌드 컨텍스트로 설정합니다.
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
-        file: ./Dockerfile
+    - name: Build docker image
+      run: docker build -t iri051/app .
+    - name: Publish image to docker hub
+      run: docker push iri051/app:latest
+
+#      uses: docker/build-push-action@v6
+#      with:
+##        Docker Build 컨텍스트 설정: Docker 빌드 컨텍스트가 올바르게 설정되었는지 확인합니다.
+##         여기서는 프로젝트 루트 디렉토리(context: .)를 빌드 컨텍스트로 설정합니다.
+#        context: .
+#        push: true
+#        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
+#        file: ./Dockerfile
   deploy:
     needs: build
     # aws ec2 를 github-action runners 에 등록 해 둬서 엑세스 가능 하게 함
