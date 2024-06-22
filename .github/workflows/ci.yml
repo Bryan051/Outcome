@@ -46,6 +46,12 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+      # build/libs 디렉토리의 파일 목록을 출력합니다.
+    - name: Show Gradle Build Result
+      run: |
+          echo "Gradle build completed!"
+          ls -R ./build/libs  
+
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -58,15 +64,6 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Application.check
-      run: |
-          cd /
-          ls -l
-          cd build
-          ls -l
-          cd lib   
-          ls -l
-      shell: bash
 
     -
       name: Build and push
