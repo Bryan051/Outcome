@@ -2,8 +2,10 @@ package com.sparta.outcome;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-// db 연결 잠시 미뤄둠 (exclude={DataSourceAutoConfiguration.class})
+// security 인증 잠시 제외(exclude={DataSourceAutoConfiguration.class})
+@EnableJpaAuditing
 @SpringBootApplication
 public class OutcomeApplication {
 
