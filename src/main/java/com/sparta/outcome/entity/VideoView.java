@@ -1,10 +1,7 @@
 package com.sparta.outcome.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -22,11 +19,11 @@ public class VideoView {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User userId;
 
     @ManyToOne
-    @JoinColumn(name = "video_id", nullable = false)
-    private Video video;
+    @JoinColumn(name = "vid_id", nullable = false)
+    private Video vidId;
 
     @Column(nullable = false)
     private int last_played; // in seconds

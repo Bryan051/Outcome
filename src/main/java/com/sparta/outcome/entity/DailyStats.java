@@ -26,7 +26,7 @@ public class DailyStats {
     private BigDecimal dailyRevenue;
 
     @ManyToOne
-    @JoinColumn(name = "video_id")
+    @JoinColumn(name = "vid_id")
     private Video video;
 
     @ManyToOne

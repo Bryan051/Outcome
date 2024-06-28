@@ -1,4 +1,4 @@
-package com.sparta.outcome.dto.request.auth;
+package com.sparta.outcome.dto;
 
 import lombok.Getter;
 import lombok.Setter;

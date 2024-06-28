@@ -1,6 +1,6 @@
 package com.sparta.outcome.service;
 
-import com.sparta.outcome.dto.request.auth.SignupRequestDto;
+import com.sparta.outcome.dto.SignupRequestDto;
 import com.sparta.outcome.entity.User;
 import com.sparta.outcome.jwt.JwtUtil;
 import com.sparta.outcome.repository.UserRepository;

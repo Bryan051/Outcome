@@ -1,7 +1,7 @@
 package com.sparta.outcome.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.outcome.dto.request.auth.LoginRequestDto;
+import com.sparta.outcome.dto.LoginRequestDto;
 import com.sparta.outcome.jwt.JwtUtil;
 import com.sparta.outcome.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
@@ -50,9 +50,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-        boolean authority = authResult.isAuthenticated();
+        boolean role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().isRole();
+//        boolean authority = authResult.isAuthenticated();
 
-        String token = jwtUtil.createToken(username, authority);
+        String token = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(token, response);
     }
 

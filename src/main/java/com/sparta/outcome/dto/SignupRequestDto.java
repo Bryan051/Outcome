@@ -1,4 +1,4 @@
-package com.sparta.outcome.dto.request.auth;
+package com.sparta.outcome.dto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;

@@ -16,6 +16,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 @Slf4j(topic = "JwtUtil")
 @Component
@@ -37,8 +38,8 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        // 일반 문자열을 가져와서 key 값으로 지정
-        key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
+        byte[] bytes = Base64.getDecoder().decode(secretkey);
+        key = Keys.hmacShaKeyFor(bytes);
     }
 
     // 토큰 생성

@@ -1,6 +1,6 @@
 package com.sparta.outcome.controller;
 
-import com.sparta.outcome.dto.request.auth.SignupRequestDto;
+import com.sparta.outcome.dto.SignupRequestDto;
 import com.sparta.outcome.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

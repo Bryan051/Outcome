@@ -33,7 +33,7 @@ public class Video {
 
     @Column(name = "view_count")
     private int viewCount;
-
+    // on update 자동갱신
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
@@ -43,7 +43,7 @@ public class Video {
     @ManyToMany
     @JoinTable(
             name = "video_ad",
-            joinColumns = @JoinColumn(name = "video_id"),
+            joinColumns = @JoinColumn(name = "vid_id"),
             inverseJoinColumns = @JoinColumn(name = "ad_id")
     )
     private List<Ad> ads = new ArrayList<>();
