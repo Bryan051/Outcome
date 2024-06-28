@@ -1,6 +1,6 @@
 package com.sparta.outcome.security;
 
-import com.sparta.outcome.entity.UserEntity;
+import com.sparta.outcome.entity.User;
 import com.sparta.outcome.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,9 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByUserName(userName).orElseThrow(
+        User user = userRepository.findByUserName(userName).orElseThrow(
                 () -> new UsernameNotFoundException("Not Found" + userName)
         );
-        return new UserDetailsImpl(userEntity);
+        return new UserDetailsImpl(user);
     }
 }

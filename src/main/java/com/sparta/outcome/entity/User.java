@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user")
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -24,7 +24,7 @@ public class UserEntity {
     private boolean authority;
     private boolean role;
 
-    public UserEntity(String userEmail, String userName, String password, boolean authority, boolean role) {
+    public User(String userEmail, String userName, String password, boolean authority, boolean role) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.password = password;
