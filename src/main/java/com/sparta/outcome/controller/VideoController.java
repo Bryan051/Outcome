@@ -30,8 +30,8 @@ public class VideoController {
 
     // 비디오 재생 요청 처리
     @PostMapping("/play")
-    public ResponseEntity<String> playVideo(@RequestBody VideoRequestDto videoRequestDto) {
-        videoService.playVideo(videoRequestDto);
+    public ResponseEntity<String> playVideo(@AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody VideoRequestDto videoRequestDto) {
+        videoService.playVideo(userDetails,videoRequestDto);
         return ResponseEntity.ok("Video playback started");
     }
 
