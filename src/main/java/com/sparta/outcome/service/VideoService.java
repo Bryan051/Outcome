@@ -52,13 +52,14 @@ public class VideoService {
     }
 
     // 비디오 중단 시 호출
-    public void pauseVideo(VideoRequestDto videoRequestDto) {
+    public void pauseVideo(UserDetailsImpl userDetails,VideoRequestDto videoRequestDto) {
         Optional<Video> videoOptional = videoRepository.findById(videoRequestDto.getVidId());
-        Optional<User> userOptional = userRepository.findById(videoRequestDto.getUserId());
+        User user = userDetails.getUser();
+//        Optional<User> userOptional = userRepository.findById(videoRequestDto.getUserId());
 
-        if (videoOptional.isPresent() && userOptional.isPresent()) {
+        if (videoOptional.isPresent()) {
             Video video = videoOptional.get();
-            User user = userOptional.get();
+//            User user = userOptional.get();
 
             VideoView videoView = videoViewRepository.findByUserIdAndVidId(user, video)
                     .orElseGet(() -> new VideoView(user, video));

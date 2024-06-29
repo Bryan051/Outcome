@@ -37,8 +37,8 @@ public class VideoController {
 
     // 비디오 중단 요청 처리
     @PostMapping("/pause")
-    public ResponseEntity<String> pauseVideo(@RequestBody VideoRequestDto videoRequestDto) {
-        videoService.pauseVideo(videoRequestDto);
+    public ResponseEntity<String> pauseVideo(@AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody VideoRequestDto videoRequestDto) {
+        videoService.pauseVideo(userDetails,videoRequestDto);
         return ResponseEntity.ok("Video playback paused");
     }
 }
