@@ -34,4 +34,10 @@ public class VideoView {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
+    public VideoView(User user, Video video) {
+        this.userId = user;
+        this.vidId = video;
+        this.last_played = 0; // 처음 생성 시 현재 재생 시간은 0으로 설정
+    }
+
 }

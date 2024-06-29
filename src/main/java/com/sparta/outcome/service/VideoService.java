@@ -1,8 +1,10 @@
 package com.sparta.outcome.service;
 
+import com.sparta.outcome.dto.VideoRequestDto;
 import com.sparta.outcome.entity.User;
 import com.sparta.outcome.entity.Video;
 import com.sparta.outcome.entity.VideoView;
+import com.sparta.outcome.repository.UserRepository;
 import com.sparta.outcome.repository.VideoRepository;
 import com.sparta.outcome.repository.VideoViewRepository;
 import jakarta.transaction.Transactional;
@@ -17,41 +19,42 @@ public class VideoService {
 
     private final VideoRepository videoRepository;
     private final VideoViewRepository videoViewRepository;
+    private final UserRepository userRepository;
 
-    @Transactional
-    public int playVideo(User userId, Video vidId) {
-        Optional<VideoView> videoViewOptional = videoViewRepository.findByUserIdAndVidId(userId, vidId);
-        if (videoViewOptional.isPresent()) {
-            VideoView videoView = videoViewOptional.get();
-            // 기존에 조회한 적 있는 경우: 마지막 시청 시점에서 재생
-            return videoView.getLast_played();
-        } else {
-            // 처음 조회하는 경우: 처음부터 재생
-            Video v = videoRepository.findById(vidId.getVidId()).orElseThrow();
-            v.setViewCount(v.getViewCount() + 1); // 조회수 증가
-            videoRepository.save(v);
+    public void playVideo(VideoRequestDto videoRequestDto) {
+        Optional<Video> videoOptional = videoRepository.findById(videoRequestDto.getVidId());
+        Optional<User> userOptional = userRepository.findById(videoRequestDto.getUserId());
+        // 비디오가 존재하면
+        if (videoOptional.isPresent()) {
+            Video video = videoOptional.get();
+            User user = userOptional.get();
 
-            VideoView videoView = new VideoView();
-            videoView.setUserId(userId);
-            videoView.setVidId(vidId);
-            videoView.setLast_played(0);
-            videoViewRepository.save(videoView);
+            VideoView videoView = videoViewRepository.findByUserIdAndVidId(user,video)
+                    .orElseGet(() -> new VideoView(user, video));
 
-            return 0; // 처음부터 재생
+            // 중간 저장 기록 없으면
+            if (videoView.getLast_played() == 0) {
+                video.setViewCount(video.getViewCount() + 1);
+                videoRepository.save(video);
+            }
         }
     }
 
-    @Transactional
-    public void stopVideo(User userId, Video vidId, int currentWatchTime) {
-        VideoView videoView = videoViewRepository.findByUserIdAndVidId(userId, vidId)
-                .orElseThrow(() -> new IllegalArgumentException("Video watch information not found"));
+    // 비디오 중단 시 호출
+    public void pauseVideo(VideoRequestDto videoRequestDto) {
+        Optional<Video> videoOptional = videoRepository.findById(videoRequestDto.getVidId());
+        Optional<User> userOptional = userRepository.findById(videoRequestDto.getUserId());
 
-        // 현재까지 재생한 시점 저장
-        videoView.setLast_played(currentWatchTime);
-        videoViewRepository.save(videoView);
+        if (videoOptional.isPresent() && userOptional.isPresent()) {
+            Video video = videoOptional.get();
+            User user = userOptional.get();
+
+            VideoView videoView = videoViewRepository.findByUserIdAndVidId(user, video)
+                    .orElseGet(() -> new VideoView(user, video));
+
+            videoView.setLast_played(videoRequestDto.getLast_played());
+            videoViewRepository.save(videoView);
+        }
     }
-
-
-
 
 }

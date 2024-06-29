@@ -1,6 +1,8 @@
 package com.sparta.outcome.controller;
 
+import com.sparta.outcome.dto.VideoRequestDto;
 import com.sparta.outcome.entity.User;
+import com.sparta.outcome.entity.Video;
 import com.sparta.outcome.security.UserDetailsImpl;
 import com.sparta.outcome.service.UserService;
 import com.sparta.outcome.service.VideoService;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,10 +22,23 @@ public class VideoController {
     private final UserService userService;
     private final VideoService videoService;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userDetails.getUser();
-        return ResponseEntity.ok(user);
+//    @PostMapping("/mine")
+//    public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        User user = userDetails.getUser();
+//        return ResponseEntity.ok(user);
+//    }
+
+    // 비디오 재생 요청 처리
+    @PostMapping("/play")
+    public ResponseEntity<String> playVideo(@RequestBody VideoRequestDto videoRequestDto) {
+        videoService.playVideo(videoRequestDto);
+        return ResponseEntity.ok("Video playback started");
     }
 
+    // 비디오 중단 요청 처리
+    @PostMapping("/pause")
+    public ResponseEntity<String> pauseVideo(@RequestBody VideoRequestDto videoRequestDto) {
+        videoService.pauseVideo(videoRequestDto);
+        return ResponseEntity.ok("Video playback paused");
+    }
 }
