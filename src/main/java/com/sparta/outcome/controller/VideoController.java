@@ -41,4 +41,5 @@ public class VideoController {
         videoService.pauseVideo(userDetails,videoRequestDto);
         return ResponseEntity.ok("Video playback paused");
     }
+
 }
