@@ -1,10 +1,7 @@
 package com.sparta.outcome.service;
 
 import com.sparta.outcome.dto.VideoRequestDto;
-import com.sparta.outcome.entity.User;
-import com.sparta.outcome.entity.Video;
-import com.sparta.outcome.entity.VideoAd;
-import com.sparta.outcome.entity.VideoView;
+import com.sparta.outcome.entity.*;
 import com.sparta.outcome.repository.VideoAdRepository;
 import com.sparta.outcome.repository.VideoRepository;
 import com.sparta.outcome.repository.VideoViewRepository;
@@ -72,27 +69,43 @@ public class VideoService {
         }
         Video video = videoOptional.get();
 
-        List<VideoView> videoViews = videoViewRepository.findByUserIdAndVidId(user, video);
+//        List<VideoView> videoViews = videoViewRepository.findByUserIdAndVidId(user, video);
+        // 가장 최신의 두 VideoView를 가져옴
+        List<VideoView> videoViews = videoViewRepository.findTop2ByUserIdAndVidIdOrderByIdDesc(user, video);
+
         if (videoViews.isEmpty()) {
-            // 새로운 비디오 뷰 생성을 play 에서 미리 해 놨으므로 비디오 뷰가 없는 경우는 정상적인 비디오정지가 아님
+            // 새로운 비디오 뷰 생성을 play 에서 항상 해 놓으므로 비디오 뷰가 없는 경우는 정상적인 비디오정지가 아님
             throw new RuntimeException(" Cannot pause the video that hasn't been played. ");
         }
         else {
+
+            // 이전의 last_played 값을 설정.
+            // 이전 재생 시점 기준으로 duration을 구해 총 재생시간 top5에 이용.
+            int previousLastPlayed = videoViews.size() > 1 ? videoViews.get(1).getLast_played() : 0;
+            int duration = 0;
+            if (videoRequestDto.getLast_played() < previousLastPlayed){
+                duration = video.getVidLength() - previousLastPlayed + videoRequestDto.getLast_played();
+            }else{
+                duration = videoRequestDto.getLast_played() - previousLastPlayed;
+            }
             // 시청기록 갱신, 해당 videoId에 해당하는 가장 최근에 생긴 videoview 를 pk 값으로 가져온다.
             Optional<VideoView> latestVideoView = videoViews.stream()
                     .max(Comparator.comparing(VideoView::getId));
 
+            int finalDuration = duration;
             latestVideoView.ifPresent(videoView -> {
                 // Request 로 받아 온 재생시점을 저장.
                 videoView.setLast_played(videoRequestDto.getLast_played());
+                // 현 재생시점 - 직전 재생시점 = 동영상 본 길이 += (누적합) 총 재생시간.
+                videoView.setDuration(finalDuration);
                 videoView.setCreatedAt(LocalDate.now());
                 videoViewRepository.save(videoView);
             });
+
         }
 
-        // 각 videoads 의 get.AdPosition 값이
         // videoRequestDto.getLast_played() 보다 작으면 adView 생성
-        videoAdService.createAdViewsIfNecessary(videoRequestDto, video);
+        videoAdService.createAdViewsIfNecessary(videoRequestDto, video,user);
 
     }
 

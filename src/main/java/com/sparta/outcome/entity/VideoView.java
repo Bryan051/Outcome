@@ -32,6 +32,9 @@ public class VideoView {
     @Column(nullable = false)
     private int last_played; // in seconds
 
+    @Column
+    private int duration;
+
 //    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 //    private LocalDateTime updatedAt;
 

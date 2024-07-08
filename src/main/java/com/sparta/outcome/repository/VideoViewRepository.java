@@ -8,21 +8,25 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface VideoViewRepository extends JpaRepository<VideoView,Long> {
     List<VideoView> findByUserIdAndVidId(User userId, Video vidId);
 
-    // video 통계시 해당 video id 에 대한 videoview를 등록한 :userId 제외한 기록만 선택해서 카운트
-    @Query("SELECT COUNT(v) FROM VideoView v WHERE v.userId <> :user AND v.vidId = :video")
-    Long countVideoViewsExcludingUser(@Param("user") User user, @Param("video") Video video);
+    List<VideoView> findTop2ByUserIdAndVidIdOrderByIdDesc(User user, Video video);
 
-//    @Query(value = "SELECT COUNT(*) FROM video_view vw " +
-//            "JOIN video v ON vw.video_id = v.video_id " +
-//            "WHERE vw.video_id = :videoId " +
-//            "AND vw.date = :date " +
-//            "AND v.user_id <> vw.user_id", nativeQuery = true)
-//    Integer countByVideoIdAndDateAndDifferentUser(@Param("videoId") Long videoId, @Param("date") LocalDate date);
+    // batch.videostats..video_view
+    // 해당 VideoView 데이터 중 해당 video를 등록한 userId를 제외한 기록만, 날짜별로 선택해서 카운트
+    // 돌아가는거 확인. video_stats 의 video_view 로 배치.
+    @Query("SELECT COUNT(v) FROM VideoView v WHERE v.userId <> :#{#video.userId} AND v.vidId = :video AND v.createdAt = :date")
+    Long countVideoViewsExcludingUserAndDate(@Param("video") Video video, @Param("date") LocalDate date);
+
+    // batch.videostats..play_time
+
+
+
+
 
 }
