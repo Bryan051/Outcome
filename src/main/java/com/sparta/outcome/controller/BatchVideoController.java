@@ -8,9 +8,11 @@ import com.sparta.outcome.repository.VideoRepository;
 import com.sparta.outcome.security.UserDetailsImpl;
 import com.sparta.outcome.service.BatchVideoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +40,15 @@ public class BatchVideoController {
         Video video = videoRepository.findById(batchVideoRequestDto.getVidId()).orElseThrow(() -> new RuntimeException("Video not found"));
 
         return batchVideoService.countVideoViewsExcludingUser(video, batchVideoRequestDto.getDate());
+    }
+
+    @GetMapping("/sumVideoViewDurations")
+    public Long sumVideoViewDurationsExcludingUserAndDate(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody BatchVideoRequestDto batchVideoRequestDto) {
+
+        Video video = videoRepository.findById(batchVideoRequestDto.getVidId())
+                .orElseThrow(() -> new RuntimeException("Video not found"));
+
+        return batchVideoService.sumVideoViewDurationsExcludingUserAndDate(video, batchVideoRequestDto.getDate());
     }
 
 

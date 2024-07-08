@@ -24,6 +24,8 @@ public interface VideoViewRepository extends JpaRepository<VideoView,Long> {
     Long countVideoViewsExcludingUserAndDate(@Param("video") Video video, @Param("date") LocalDate date);
 
     // batch.videostats..play_time
+    @Query("SELECT SUM(v.duration) FROM VideoView v WHERE v.userId <> :#{#video.userId} AND v.vidId = :video AND v.createdAt = :date")
+    Long sumVideoViewDurationsExcludingUserAndDate(@Param("video") Video video, @Param("date") LocalDate date);
 
 
 

@@ -21,7 +21,8 @@ public class BatchVideoService {
         return videoViewRepository.countVideoViewsExcludingUserAndDate(video, date);
     }
 
-    public void videoStatsService() {
+    public Long sumVideoViewDurationsExcludingUserAndDate(Video video, LocalDate date) {
+        return videoViewRepository.sumVideoViewDurationsExcludingUserAndDate(video, date);
     }
 
     public void videoRevService() {
