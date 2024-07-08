@@ -16,18 +16,21 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class VideoStats {
+public class AdStats {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDate date;
 
-    private int videoView;
+    private int adView;
 
-    private Long playTime;
 
-    private Long videoId;
+    private Long videoAdId;
 
-    // getters and setters
+//    private Long videoId;
+//
+//    private Long adId;
+
 }

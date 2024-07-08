@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "video")
-@Table(name = "video")
+@Entity
 public class Video {
 
     @Id
@@ -31,25 +30,23 @@ public class Video {
     @Column(name = "vid_length")
     private int vidLength; // 초 단위
 
+    @Column(name = "total_video_view")
+    private int totalVideoView; // 조회수 누적합
+
     @Column(name = "view_count")
     private int viewCount;
     // on update 자동갱신
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at")
+    private LocalDate updatedAt;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    @Column(name = "created_at")
+    private LocalDate createdAt;
 
-    @ManyToMany
-    @JoinTable(
-            name = "video_ad",
-            joinColumns = @JoinColumn(name = "vid_id"),
-            inverseJoinColumns = @JoinColumn(name = "ad_id")
-    )
-    private List<Ad> ads = new ArrayList<>();
+//    @OneToMany(mappedBy = "video")
+//    private List<DailyStats> dailyStats = new ArrayList<>();
 
     @OneToMany(mappedBy = "video")
-    private List<DailyStats> dailyStats = new ArrayList<>();
+    private List<VideoAd> videoAds = new ArrayList<>();
 
     // getters and setters
 }

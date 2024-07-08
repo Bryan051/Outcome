@@ -3,19 +3,17 @@ package com.sparta.outcome.service;
 import com.sparta.outcome.dto.VideoRequestDto;
 import com.sparta.outcome.entity.User;
 import com.sparta.outcome.entity.Video;
+import com.sparta.outcome.entity.VideoAd;
 import com.sparta.outcome.entity.VideoView;
-import com.sparta.outcome.repository.UserRepository;
+import com.sparta.outcome.repository.VideoAdRepository;
 import com.sparta.outcome.repository.VideoRepository;
 import com.sparta.outcome.repository.VideoViewRepository;
 import com.sparta.outcome.security.UserDetailsImpl;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Collections;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,63 +23,77 @@ public class VideoService {
 
     private final VideoRepository videoRepository;
     private final VideoViewRepository videoViewRepository;
-//    private final UserRepository userRepository;
+    private final VideoAdRepository videoAdRepository;
+    private final VideoAdService videoAdService;
 
     public void playVideo(UserDetailsImpl userDetails, VideoRequestDto videoRequestDto) {
         Optional<Video> videoOptional = videoRepository.findById(videoRequestDto.getVidId());
 //        Optional<User> userOptional = userRepository.findById(videoRequestDto.getUserId());
         User user = userDetails.getUser();
 
-        // 비디오가 존재하면
+        // 비디오가 존재하지 않으면
         if (videoOptional.isEmpty()) {
             throw new RuntimeException("Video not found with id " + videoRequestDto.getVidId());
         }
         Video video = videoOptional.get();
-//            User user = userOptional.get();
-        // 시청기록 가져오기. 없으면 생성.
-        VideoView videoView = videoViewRepository.findByUserIdAndVidId(user, video)
-                .orElseGet(() -> new VideoView(user, video));
 
-        // 중간 저장 기록 없으면
-        if (videoView.getLast_played() == 0) {
-            video.setViewCount(video.getViewCount() + 1);
-            videoRepository.save(video);
-        }
-        videoView.setUpdatedAt(LocalDateTime.now());
-        videoViewRepository.save(videoView);
+//        List<VideoView> videoViews = videoViewRepository.findByUserIdAndVidId(user, video);
+//        // videoview 에 기록이 없을때 = 초기값 설정.
+//        if (videoViews.isEmpty()) {
+//            // 비디오 뷰가 없는 경우 새로운 비디오 뷰 생성
+//            VideoView newVideoView = new VideoView();
+//            newVideoView.setUserId(user);
+//            newVideoView.setVidId(video);
+//            newVideoView.setCreatedAt(LocalDate.now());
+//            newVideoView.setLast_played(0);
+//            videoViewRepository.save(newVideoView);
+//        }
+        // 기존 시청기록 있어도 0으로 생성 후 pause 시에 시청구간 update
+        VideoView newVideoView = new VideoView();
+        newVideoView.setUserId(user);
+        newVideoView.setVidId(video);
+        newVideoView.setCreatedAt(LocalDate.now());
+        newVideoView.setLast_played(0);
+        videoViewRepository.save(newVideoView);
+
     }
 
-    // 비디오 중단 시 호출
     // lastPlayed 를 서비스 로직에서 처리해서 받아와야 하는데 서비스 단을 개발하지 않으므로
     // 동영상 일시정지는 없다고 가정하고 보거나 끄는 것만 가능.
-    public void pauseVideo(UserDetailsImpl userDetails,VideoRequestDto videoRequestDto) {
+    public void pauseVideo(UserDetailsImpl userDetails, VideoRequestDto videoRequestDto) {
         Optional<Video> videoOptional = videoRepository.findById(videoRequestDto.getVidId());
         User user = userDetails.getUser();
-//        Optional<User> userOptional = userRepository.findById(videoRequestDto.getUserId());
 
-        if (videoOptional.isPresent()) {
-            Video video = videoOptional.get();
-//            User user = userOptional.get();
+        // 내가 동영상 등록한 것이라고 해도 시청기록 용으로 생성해주고 배치시에 제외
+        // if (!user.getUserId().equals(videoRequestDto.getUserId()))
 
-            VideoView videoView = videoViewRepository.findByUserIdAndVidId(user, video)
-                    .orElseGet(() -> new VideoView(user, video));
-
-            // 현재까지 재생한 시점 저장
-            LocalDateTime now = LocalDateTime.now();
-            Duration duration = Duration.between(videoView.getUpdatedAt(), now);
-            int additionalSeconds = (int) duration.getSeconds();
-            // 저번 재생시점에 추가 재생(additionalSeconds)시간 더해서 재생시점 재설정.
-            // 비디오 길이보다 긴 경우 0 = 다 봤다고 판단, 조회수 1 증가.
-            int newLastPlayed = videoView.getLast_played() + additionalSeconds;
-            if (newLastPlayed > video.getVidLength()) {
-                newLastPlayed = 0;
-                video.setViewCount(video.getViewCount() + 1);
-            }
-
-            videoView.setLast_played(newLastPlayed);
-            videoView.setUpdatedAt(LocalDateTime.now());
-            videoViewRepository.save(videoView);
+        if (videoOptional.isEmpty()) {
+            throw new RuntimeException("Wrong request with Video id " + videoRequestDto.getVidId());
         }
+        Video video = videoOptional.get();
+
+        List<VideoView> videoViews = videoViewRepository.findByUserIdAndVidId(user, video);
+        if (videoViews.isEmpty()) {
+            // 새로운 비디오 뷰 생성을 play 에서 미리 해 놨으므로 비디오 뷰가 없는 경우는 정상적인 비디오정지가 아님
+            throw new RuntimeException(" Cannot pause the video that hasn't been played. ");
+        }
+        else {
+            // 시청기록 갱신, 해당 videoId에 해당하는 가장 최근에 생긴 videoview 를 pk 값으로 가져온다.
+            Optional<VideoView> latestVideoView = videoViews.stream()
+                    .max(Comparator.comparing(VideoView::getId));
+
+            latestVideoView.ifPresent(videoView -> {
+                // Request 로 받아 온 재생시점을 저장.
+                videoView.setLast_played(videoRequestDto.getLast_played());
+                videoView.setCreatedAt(LocalDate.now());
+                videoViewRepository.save(videoView);
+            });
+        }
+
+        // 각 videoads 의 get.AdPosition 값이
+        // videoRequestDto.getLast_played() 보다 작으면 adView 생성
+        videoAdService.createAdViewsIfNecessary(videoRequestDto, video);
+
     }
 
 }

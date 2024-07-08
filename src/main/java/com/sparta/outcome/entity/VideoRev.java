@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Statistics {
+public class VideoRev {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +25,8 @@ public class Statistics {
 
     private LocalDate date;
 
-    private Long vidId;
-    private int viewCount;
-    // 재생시간 가장 긴 동영상용 - 조회수 * 동영상길이
-    private Long playTime;
+    private Long videoId;
+
+    private BigDecimal videoRevenue;
+
 }

@@ -12,5 +12,4 @@ public class OutcomeApplication {
     public static void main(String[] args) {
         SpringApplication.run(OutcomeApplication.class, args);
     }
-
 }

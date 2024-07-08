@@ -15,6 +15,7 @@ public class VideoRequestDto {
 
     @NotBlank
     private Long vidId;
+
     private int last_played;
 
 
