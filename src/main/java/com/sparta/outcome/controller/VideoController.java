@@ -16,14 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/video")
 public class VideoController {
 
-//    private final UserService userService;
     private final VideoService videoService;
-
-//    @PostMapping("/mine")
-//    public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        User user = userDetails.getUser();
-//        return ResponseEntity.ok(user);
-//    }
 
     // 비디오 재생 요청 처리
     @PostMapping("/play")

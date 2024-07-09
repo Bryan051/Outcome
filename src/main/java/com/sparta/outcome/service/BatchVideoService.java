@@ -17,7 +17,7 @@ public class BatchVideoService {
 
     // video Stats
     @Transactional
-    public Long countVideoViewsExcludingUser(Video video, LocalDate date) {
+    public int countVideoViewsExcludingUser(Video video, LocalDate date) {
         return videoViewRepository.countVideoViewsExcludingUserAndDate(video, date);
     }
 
@@ -25,7 +25,8 @@ public class BatchVideoService {
         return videoViewRepository.sumVideoViewDurationsExcludingUserAndDate(video, date);
     }
 
-    public void videoRevService() {
-    }
+//    public Long videoRevService(Video video, int totalView) {
+//        return videoViewRepository.sumVideoRevenue(video,totalView);
+//    }
 
 }
