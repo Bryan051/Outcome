@@ -12,7 +12,9 @@ import java.util.List;
 public interface AdViewRepository extends JpaRepository<AdView,Long> {
 
     // 일 광고 뷰 조회
-    @Query("SELECT COUNT(a) FROM AdView a WHERE a.videoAd.id IN :videoAdIds AND a.createdAt = :date")
-    long countByVideoAdIdsAndDate(@Param("videoAdIds") List<Long> videoAdIds, @Param("date") LocalDate date);
+    @Query("SELECT COUNT(a) FROM AdView a WHERE a.videoAd IN :videoAds AND a.createdAt = :date")
+    long countByVideoAdsAndDate(@Param("videoAds") List<VideoAd> videoAds, @Param("date") LocalDate date);
+
+
 }
 

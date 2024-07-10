@@ -13,5 +13,5 @@ import java.util.List;
 public interface VideoAdRepository extends JpaRepository<VideoAd, Long> {
     List<VideoAd> findVideoAdByVideo(Video video);
 
-    List<VideoAd> findVideoAdsByAd_Id(Long adId);
+    List<VideoAd> findVideoAdsByVideoAndAd(Video video, Ad ad);
 }
