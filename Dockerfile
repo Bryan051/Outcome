@@ -1,5 +1,5 @@
-# 베이스 이미지로 OpenJDK 17 사용.
-FROM openjdk:17-jdk
+# 첫 번째 스테이지: 패키지 설치
+FROM openjdk:17-jdk-slim
 
 # JAR 파일을 저장할 디렉토리를 설정합니다.
 WORKDIR /app

@@ -1,7 +1,7 @@
 services:
-  mysql:
-    image: mysql:latest
-    container_name: outcome
+  mysql-master:
+    image: mysql:8.0.38
+    container_name: mysql-master
     ports:
       - "3306:3306"
     command:
@@ -12,22 +12,61 @@ services:
       MYSQL_DATABASE: outcome
       MYSQL_USER: iri
       MYSQL_PASSWORD: 1234qwer
+    volumes:
+      - ./master/data:/var/lib/mysql
+      - ./master/config:/etc/mysql/conf.d
+  mysql-slave:
+    image: mysql:8.0.38
+    container_name: mysql-slave
+    ports:
+      - "3307:3306"
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234qwer
+      MYSQL_DATABASE: outcome
+      MYSQL_USER: iri
+      MYSQL_PASSWORD: 1234qwer
+    depends_on:
+      - mysql-master
+    volumes:
+      - ./slave/data:/var/lib/mysql
+      - ./slave/config:/etc/mysql/conf.d
+
 
   spring-outcome:
-    image: iri051/app
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: spring-outcome
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      - mysql-master
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/outcome
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-master:3306/outcome
       SPRING_DATASOURCE_USERNAME: iri
       SPRING_DATASOURCE_PASSWORD: 1234qwer
+
+
 #    volumes:
 #      - ./Outcome-0.0.1-SNAPSHOT.jar:/app/app.jar
 #    working_dir: /app
 #    command: [ "java", "-jar", "app.jar" ]
+  outcomebatch:
+    build:
+      context: ../OutcomeBatch
+      dockerfile: Dockerfile
+    container_name: OutcomeBatch
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql-master
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-master:3306/outcome
+      SPRING_DATASOURCE_USERNAME: iri
+      SPRING_DATASOURCE_PASSWORD: 1234qwer
 
   web:
     container_name: web
