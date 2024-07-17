@@ -1,17 +1,18 @@
 package com.sparta.outcome.service;
 
+import com.sparta.outcome.domain.*;
+import com.sparta.outcome.domain.read.AdReadRepository;
+import com.sparta.outcome.domain.write.AdViewWriteRepository;
+import com.sparta.outcome.domain.write.AdWriteRepository;
+import com.sparta.outcome.domain.write.VideoAdWriteRepository;
 import com.sparta.outcome.dto.VideoRequestDto;
-import com.sparta.outcome.entity.*;
-import com.sparta.outcome.repository.AdRepository;
-import com.sparta.outcome.repository.AdViewRepository;
-import com.sparta.outcome.repository.VideoAdRepository;
-import com.sparta.outcome.repository.VideoViewRepository;
+import com.sparta.outcome.domain.read.VideoAdReadRepository;
+import com.sparta.outcome.domain.read.VideoViewReadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -19,20 +20,23 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class VideoAdService {
-    private final VideoAdRepository videoAdRepository;
-    private final AdRepository adRepository;
-    private final AdViewRepository adViewRepository;
-    private final VideoViewRepository videoViewRepository;
+    private final VideoAdReadRepository videoAdReadRepository;
+    private final AdReadRepository adReadRepository;
+    private final AdWriteRepository adWriteRepository;
+    private final AdViewWriteRepository adViewWriteRepository;
+    private final VideoViewReadRepository videoViewReadRepository;
+    private final VideoAdWriteRepository videoAdWriteRepository;
 
     // 비디오 생성시 랜덤 광고 넣어주는 메소드
+    // DATA LOADER 에서 쓰는 메서드이므로 전부 writer repository로 통일
     @Transactional
     public void addRandomAdsToVideo(Video video, int adCount) {
         Random random = new Random();
-        long adRepositoryCount = adRepository.count();
+        long adRepositoryCount = adWriteRepository.count();
         for (int i = 0; i < adCount; i++) {
             // ad 목록에서 랜덤한 값 가져와서 videoad 안에 매핑하기
             long randomAdId = random.nextInt((int) adRepositoryCount) + 1;
-            Optional<Ad> optionalAd = adRepository.findById(randomAdId);
+            Optional<Ad> optionalAd = adWriteRepository.findById(randomAdId);
             // 광고 순서 * 5분만큼 adposition 넣어줌
             int adPosition = 300 * (i + 1);
             optionalAd.ifPresent(ad -> {
@@ -40,7 +44,7 @@ public class VideoAdService {
                 videoAd.setVideo(video);
                 videoAd.setAd(ad);
                 videoAd.setAdPosition(adPosition);
-                videoAdRepository.save(videoAd);
+                videoAdWriteRepository.save(videoAd);
             });
         }
     }
@@ -51,20 +55,20 @@ public class VideoAdService {
     public void createAdViewsIfNecessary(VideoRequestDto videoRequestDto, Video video,User user) {
 
         // 가장 최신의 두 VideoView를 가져옴
-        List<VideoView> videoViews = videoViewRepository.findTop2ByUserIdAndVidIdOrderByIdDesc(user, video);
+        List<VideoView> videoViews = videoViewReadRepository.findTop2ByUserIdAndVidIdOrderByIdDesc(user, video);
 
         // 이전의 last_played 값을 설정. 2개이상일수밖에없음.
         int previousLastPlayed = videoViews.size() > 1 ? videoViews.get(1).getLast_played() : 0;
 
         // 모든 VideoAd를 가져옴
-        List<VideoAd> videoAds = videoAdRepository.findVideoAdByVideo(video);
+        List<VideoAd> videoAds = videoAdReadRepository.findVideoAdByVideo(video);
         for (VideoAd videoAd : videoAds) {
             // VideoAd의 AdPosition이 previousLastPlayed와 last_played 사이에 있는지 확인
             if (videoAd.getAdPosition() > previousLastPlayed && videoAd.getAdPosition() <= videoRequestDto.getLast_played()) {
                 AdView adView = new AdView();
                 adView.setCreatedAt(LocalDate.now());
                 adView.setVideoAd(videoAd);
-                adViewRepository.save(adView);
+                adViewWriteRepository.save(adView);
             }
         }
     }

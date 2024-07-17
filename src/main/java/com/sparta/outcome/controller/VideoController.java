@@ -1,10 +1,7 @@
 package com.sparta.outcome.controller;
 
 import com.sparta.outcome.dto.VideoRequestDto;
-import com.sparta.outcome.entity.User;
-import com.sparta.outcome.entity.Video;
 import com.sparta.outcome.security.UserDetailsImpl;
-import com.sparta.outcome.service.UserService;
 import com.sparta.outcome.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.sparta.outcome.entity;
+package com.sparta.outcome.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -13,18 +14,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ad_view")
-public class AdView {
+@Table(name = "video_rev")
+public class VideoRev {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "created_at")
-    private LocalDate createdAt;
+    private LocalDate date;
 
-    @ManyToOne
-    @JoinColumn(name = "video_ad_id", nullable = false)
-    private VideoAd videoAd;
+    @Column(name = "video_id")
+    private Long videoId;
+
+    @Column(name = "video_revenue")
+    private BigDecimal videoRevenue;
 
 }

@@ -1,18 +1,20 @@
-package com.sparta.outcome.repository;
+package com.sparta.outcome.domain.read;
 
-import com.sparta.outcome.entity.User;
-import com.sparta.outcome.entity.Video;
-import com.sparta.outcome.entity.VideoView;
+import com.sparta.outcome.domain.User;
+import com.sparta.outcome.domain.Video;
+import com.sparta.outcome.domain.VideoView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface VideoViewRepository extends JpaRepository<VideoView,Long> {
+@Transactional(readOnly = true)
+public interface VideoViewReadRepository extends JpaRepository<VideoView,Long> {
     List<VideoView> findByUserIdAndVidId(User userId, Video vidId);
 
     List<VideoView> findTop2ByUserIdAndVidIdOrderByIdDesc(User user, Video video);

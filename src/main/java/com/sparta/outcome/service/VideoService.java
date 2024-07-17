@@ -1,10 +1,13 @@
 package com.sparta.outcome.service;
 
+import com.sparta.outcome.domain.User;
+import com.sparta.outcome.domain.Video;
+import com.sparta.outcome.domain.VideoView;
+import com.sparta.outcome.domain.write.VideoViewWriteRepository;
 import com.sparta.outcome.dto.VideoRequestDto;
-import com.sparta.outcome.entity.*;
-import com.sparta.outcome.repository.VideoAdRepository;
-import com.sparta.outcome.repository.VideoRepository;
-import com.sparta.outcome.repository.VideoViewRepository;
+import com.sparta.outcome.domain.read.VideoAdReadRepository;
+import com.sparta.outcome.domain.read.VideoReadRepository;
+import com.sparta.outcome.domain.read.VideoViewReadRepository;
 import com.sparta.outcome.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VideoService {
 
-    private final VideoRepository videoRepository;
-    private final VideoViewRepository videoViewRepository;
-    private final VideoAdRepository videoAdRepository;
+    private final VideoReadRepository videoReadRepository;
+    private final VideoViewReadRepository videoViewReadRepository;
+    private final VideoAdReadRepository videoAdReadRepository;
+    private final VideoViewWriteRepository videoViewWriteRepository;
     private final VideoAdService videoAdService;
 
     public void playVideo(UserDetailsImpl userDetails, VideoRequestDto videoRequestDto) {
-        Optional<Video> videoOptional = videoRepository.findById(videoRequestDto.getVidId());
+        Optional<Video> videoOptional = videoReadRepository.findById(videoRequestDto.getVidId());
 //        Optional<User> userOptional = userRepository.findById(videoRequestDto.getUserId());
         User user = userDetails.getUser();
 
@@ -51,14 +55,14 @@ public class VideoService {
         newVideoView.setVidId(video);
         newVideoView.setCreatedAt(LocalDate.now());
         newVideoView.setLast_played(0);
-        videoViewRepository.save(newVideoView);
+        videoViewWriteRepository.save(newVideoView);
 
     }
 
     // lastPlayed 를 서비스 로직에서 처리해서 받아와야 하는데 서비스 단을 개발하지 않으므로
     // 동영상 일시정지는 없다고 가정하고 보거나 끄는 것만 가능.
     public void pauseVideo(UserDetailsImpl userDetails, VideoRequestDto videoRequestDto) {
-        Optional<Video> videoOptional = videoRepository.findById(videoRequestDto.getVidId());
+        Optional<Video> videoOptional = videoReadRepository.findById(videoRequestDto.getVidId());
         User user = userDetails.getUser();
 
         // 내가 동영상 등록한 것이라고 해도 시청기록 용으로 생성해주고 배치시에 제외
@@ -71,7 +75,7 @@ public class VideoService {
 
 //        List<VideoView> videoViews = videoViewRepository.findByUserIdAndVidId(user, video);
         // 가장 최신의 두 VideoView를 가져옴
-        List<VideoView> videoViews = videoViewRepository.findTop2ByUserIdAndVidIdOrderByIdDesc(user, video);
+        List<VideoView> videoViews = videoViewReadRepository.findTop2ByUserIdAndVidIdOrderByIdDesc(user, video);
 
         if (videoViews.isEmpty()) {
             // 새로운 비디오 뷰 생성을 play 에서 항상 해 놓으므로 비디오 뷰가 없는 경우는 정상적인 비디오정지가 아님
@@ -99,7 +103,7 @@ public class VideoService {
                 // 현 재생시점 - 직전 재생시점 = 동영상 본 길이 += (누적합) 총 재생시간.
                 videoView.setDuration(finalDuration);
                 videoView.setCreatedAt(LocalDate.now());
-                videoViewRepository.save(videoView);
+                videoViewWriteRepository.save(videoView);
             });
 
         }

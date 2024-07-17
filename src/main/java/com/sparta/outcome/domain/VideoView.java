@@ -1,4 +1,4 @@
-package com.sparta.outcome.entity;
+package com.sparta.outcome.domain;
 
 import com.sparta.outcome.dto.VideoRequestDto;
 import jakarta.persistence.*;
@@ -13,11 +13,12 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "VideoView")
-@Table(name = "Video_View")
+@Entity
+@Table(name = "video_view")
 public class VideoView {
 
     @Id
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -38,7 +39,7 @@ public class VideoView {
 //    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 //    private LocalDateTime updatedAt;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDate createdAt;
 
 

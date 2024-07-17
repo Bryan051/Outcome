@@ -1,13 +1,10 @@
 package com.sparta.outcome.security;
 
-import com.sparta.outcome.entity.User;
+import com.sparta.outcome.domain.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
 

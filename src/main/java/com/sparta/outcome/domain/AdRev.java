@@ -1,15 +1,11 @@
-package com.sparta.outcome.entity;
+package com.sparta.outcome.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -17,7 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class VideoRev {
+@Table(name = "ad_rev")
+public class AdRev {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +22,15 @@ public class VideoRev {
 
     private LocalDate date;
 
-    private Long videoId;
+    @Column(name = "ad_revenue")
+    private Long adRevenue;
 
-    private BigDecimal videoRevenue;
+    @Column(name = "video_ad_id")
+    private Long videoAdId;
+
+//    private Long videoId;
+//
+//    private Long adId;
+
 
 }

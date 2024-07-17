@@ -1,9 +1,6 @@
-package com.sparta.outcome.entity;
+package com.sparta.outcome.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class AdRev {
+@Table(name = "ad_stats")
+public class AdStats {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +22,14 @@ public class AdRev {
 
     private LocalDate date;
 
-    private Long adRevenue;
+    @Column(name = "ad_view")
+    private int adView;
 
-
+    @Column(name = "video_ad_id")
     private Long videoAdId;
 
 //    private Long videoId;
 //
 //    private Long adId;
-
 
 }

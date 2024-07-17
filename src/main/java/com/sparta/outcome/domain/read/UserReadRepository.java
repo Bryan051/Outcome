@@ -1,14 +1,16 @@
-package com.sparta.outcome.repository;
+package com.sparta.outcome.domain.read;
 
 
-import com.sparta.outcome.entity.User;
+import com.sparta.outcome.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {//pk의 타입
+@Transactional(readOnly = true)
+public interface UserReadRepository extends JpaRepository<User, Long> {//pk의 타입
 
     Optional<User> findByUserName(String userName);
 

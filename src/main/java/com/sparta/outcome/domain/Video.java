@@ -1,4 +1,4 @@
-package com.sparta.outcome.entity;
+package com.sparta.outcome.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "video")
 public class Video {
 
     @Id
@@ -33,8 +34,8 @@ public class Video {
     @Column(name = "total_video_view")
     private int totalVideoView; // 조회수 누적합
 
-    @Column(name = "view_count")
-    private int viewCount;
+//    @Column(name = "view_count")
+//    private int viewCount;
     // on update 자동갱신
     @Column(name = "updated_at")
     private LocalDate updatedAt;

@@ -1,4 +1,4 @@
-package com.sparta.outcome.entity;
+package com.sparta.outcome.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

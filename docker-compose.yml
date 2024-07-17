@@ -1,9 +1,13 @@
+networks:
+  mynetwork:
+    driver: bridge
+
 services:
   mysql-master:
     image: mysql:8.0.38
     container_name: mysql-master
     ports:
-      - "3306:3306"
+      - "3306:3306" # 호스트의 3306 포트를 컨테이너의 3306 포트에 매핑
     command:
       - '--character-set-server=utf8mb4'
       - '--collation-server=utf8mb4_unicode_ci'
@@ -15,11 +19,14 @@ services:
     volumes:
       - ./master/data:/var/lib/mysql
       - ./master/config:/etc/mysql/conf.d
+    networks:
+      - mynetwork
+
   mysql-slave:
     image: mysql:8.0.38
     container_name: mysql-slave
     ports:
-      - "3307:3306"
+      - "3307:3306" # 호스트의 3307 포트를 컨테이너의 3306 포트에 매핑
     command:
       - '--character-set-server=utf8mb4'
       - '--collation-server=utf8mb4_unicode_ci'
@@ -33,6 +40,8 @@ services:
     volumes:
       - ./slave/data:/var/lib/mysql
       - ./slave/config:/etc/mysql/conf.d
+    networks:
+      - mynetwork
 
 
   spring-outcome:
@@ -45,9 +54,14 @@ services:
     depends_on:
       - mysql-master
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-master:3306/outcome
-      SPRING_DATASOURCE_USERNAME: iri
-      SPRING_DATASOURCE_PASSWORD: 1234qwer
+      SPRING_DATASOURCE_WRITE_URL: jdbc:mysql://mysql-master:3306/outcome
+      SPRING_DATASOURCE_WRITE_USERNAME: iri
+      SPRING_DATASOURCE_WRITE_PASSWORD: 1234qwer
+      SPRING_DATASOURCE_READ_URL: jdbc:mysql://mysql-slave:3306/outcome
+      SPRING_DATASOURCE_READ_USERNAME: iri
+      SPRING_DATASOURCE_READ_PASSWORD: 1234qwer
+    networks:
+      - mynetwork
 
 
 #    volumes:
@@ -63,16 +77,25 @@ services:
       - "8081:8080"
     depends_on:
       - mysql-master
+      - mysql-slave
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-master:3306/outcome
-      SPRING_DATASOURCE_USERNAME: iri
-      SPRING_DATASOURCE_PASSWORD: 1234qwer
+      SPRING_DATASOURCE_BATCH_URL: jdbc:mysql://mysql-master:3306/outcome
+      SPRING_DATASOURCE_BATCH_USERNAME: iri
+      SPRING_DATASOURCE_BATCH_PASSWORD: 1234qwer
+      SPRING_DATASOURCE_STREAMING_URL: jdbc:mysql://mysql-slave:3306/outcome
+      SPRING_DATASOURCE_STREAMING_USERNAME: iri
+      SPRING_DATASOURCE_STREAMING_PASSWORD: 1234qwer
+
+    networks:
+      - mynetwork
 
   web:
     container_name: web
     image: nginx
     expose:
       - 80
+    networks:
+      - mynetwork
 #      - 8080
 #    ports:
 #      - 8080:8080
@@ -88,3 +111,5 @@ services:
       - web
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - mynetwork
