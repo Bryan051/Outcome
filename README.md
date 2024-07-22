@@ -32,7 +32,7 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
       1. 데이터 양과 서버의 메모리 용량에 따라 페이지 사이즈를 조절 해 Video 객체와 관련된 VideoView 목록을 모두 가져와 필터링하고 통계, 정산. (X)</br>
       2. 단일 책임 원칙을 유지한채 (reader 에서 video만) processor 에서 COUNT와 SUM으로 단일 결과를 반환하도록 한다.</br></br>
       - 배치(통계) 시간: ideo_view 3천만개/ 13분</br>   <img width="496" alt="image" src="https://github.com/user-attachments/assets/f34e8073-106b-49fa-82eb-1b9a6be9e02b"></br>
-  배치 리팩토링:[Batch Refactoring](https://github.com/Bryan051/TIL/blob/main/OutcomeProject/Batch.md), N + 1 개선: [N+1](https://github.com/Bryan051/TIL/blob/main/OutcomeProject/Batch_N%2B1.md)
+  [Spring Batch 성능 개선 기록](https://uttermost-band-f56.notion.site/Spring-Batch-89d7762014664bf9aae50d72676a143f?pvs=4)
     </details>
 </details>    
 
