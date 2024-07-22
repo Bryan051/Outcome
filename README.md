@@ -15,30 +15,28 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
   - master/slave 구조로 가용성 DB 구축
   - CQRS
 
-## 아키텍처
+
 
 ## 📚 기술적 의사결정
 가상스레드   
 추후 작성
-## 성능개선
-<details><summary>Batch 구조 개선, 트러블 슈팅</summary>
-  1. reader(paging), processor, writer(chunk) 구조에서, video 를 읽어오고 processor 에서 videoview 를 조회해 count 하는 방식이다.</br>
-  2. paging 으로 많은 데이터를 끊어서 가져오는게 reader 의 의의라면, 수만건이 쌓이는 videoview 를 대상으로 읽는게 나은 방법이 아닐까?</br>
+## 🏹 주요 경험
+### 1. Batch 성능 개선
+#### 1.1 최종 성능
+#### 1.2 성능개선 추이
+- 성능개선추이 그래프 있음 좋고.
+#### 1.3 주요 개선
+- 1차 최적화: 구조 변경 시도 및 chunk 사이즈
+- 2차 최적화: N + 1 쿼리 최적화
+#### 1.4 [Spring Batch 성능 개선 기록](https://uttermost-band-f56.notion.site/Spring-Batch-89d7762014664bf9aae50d72676a143f?pvs=4)
 
-  - N+1 문제가 발생.
-  - processor 에서 join fetch를 한다면?
-  - update 를 해야되는, 누적합을 고려할 테이블이 있으면 reader로 paging 해서 들고 와 계산 한 값에 또 계산하는 경우가 발생할 가능성이 있다.
-    <details><summary>리팩토링</summary>
-      1. 데이터 양과 서버의 메모리 용량에 따라 페이지 사이즈를 조절 해 Video 객체와 관련된 VideoView 목록을 모두 가져와 필터링하고 통계, 정산. (X)</br>
-      2. 단일 책임 원칙을 유지한채 (reader 에서 video만) processor 에서 COUNT와 SUM으로 단일 결과를 반환하도록 한다.</br></br>
-      - 배치(통계) 시간: ideo_view 3천만개/ 13분</br>   <img width="496" alt="image" src="https://github.com/user-attachments/assets/f34e8073-106b-49fa-82eb-1b9a6be9e02b"></br>
-  [Spring Batch 성능 개선 기록](https://uttermost-band-f56.notion.site/Spring-Batch-89d7762014664bf9aae50d72676a143f?pvs=4)
-    </details>
-</details>    
 
 ## 트러블 슈팅
 
-[프로젝트 전체 성능개선, 트러블 슈팅 모음](https://github.com/Bryan051/TIL/tree/main/OutcomeProject)
+[프로젝트 전체 성능개선, 트러블 슈팅 모음 WIL](https://github.com/Bryan051/TIL/tree/main/OutcomeProject)
+
+## 🔎 아키텍처
+
 ## 기능구현 요약
 
 
