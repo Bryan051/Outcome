@@ -18,10 +18,6 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
   - master/slave 구조로 가용성 DB 구축
   - CQRS
 
-## 📚 기술적 의사결정
-가상스레드   
-추후 작성
-
 ## 🏹 주요 경험
 ### 1. Batch 성능 개선
 #### 1.1 최종 성능
@@ -60,18 +56,19 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
 - 데이터 동기화: ROW 단위 실시간 동기화로 정합성 유지
 - 트래픽 분산: Replica DB를 통한 읽기 작업 부하 분산 및 가용성 향상
 
-
-## 트러블 슈팅
+## 🚨 트러블 슈팅
+### 1. 멀티스레드 성능개선과 문제점
+  - [ThreadPoolExecutor 고찰](https://uttermost-band-f56.notion.site/d0f326a7ccb348d1a3cd63867afb32ba?pvs=4)
 
 [프로젝트 전체 성능개선, 트러블 슈팅 모음 WIL](https://github.com/Bryan051/TIL/tree/main/OutcomeProject)
 
+## 📚 기술적 의사결정
+가상스레드   
+후술.
+
 ## 🔎 아키텍처
 
-## 기능구현 요약
-
-
-통계 및 정산 기능
-
-부하 분산
-
-CQRS 패턴 적용
+## 📃 프로젝트 상세
+### ⚙️️ 주요 기술 스택
+### 📘 API 문서
+### 📙ERD
