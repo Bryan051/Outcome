@@ -59,12 +59,12 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
 ## 🚨 트러블 슈팅
 ### 1. 멀티스레드 성능개선과 문제점
   - [ThreadPoolExecutor 고찰](https://uttermost-band-f56.notion.site/d0f326a7ccb348d1a3cd63867afb32ba?pvs=4)
+  - [Hikari CP 데드락](https://uttermost-band-f56.notion.site/Hikari-CP-9085c6e5349d4eaf8946c751e1dc8ae7?pvs=4)
 
 [프로젝트 전체 성능개선, 트러블 슈팅 모음 WIL](https://github.com/Bryan051/TIL/tree/main/OutcomeProject)
 
 ## 📚 기술적 의사결정
-가상스레드   
-후술.
+[파티셔닝과 멀티스레딩](https://uttermost-band-f56.notion.site/a64e711d9bb943aba7da3538e972c511?pvs=4)
 
 ## 🔎 아키텍처
 
