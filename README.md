@@ -28,19 +28,22 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
 |기존|1천만|13분| -
 |1차 성능 개선|1천만|1분|93%
 |2차 성능 개선|3천5백만|10분|-
-|2-2 개선|3천5백만|6분|40%
-|3차 성능 개선|3천5백만|실패
+|3차 성능 개선|3천5백만|6분|40%
+|3-2차 개선|3천5백만|실패|-
+|4차 성능 개선|3천만|1분40초|86%
 #### 1.3 주요 개선
 - 1차 최적화: 구조 변경 시도 및 chunk 사이즈
 - 2차 최적화: N + 1 쿼리 최적화, userId, videoId, created_at 을 기준으로 데이터 인덱싱.
-#### 1.4 [Spring Batch 성능 개선 기록](https://uttermost-band-f56.notion.site/Spring-Batch-89d7762014664bf9aae50d72676a143f?pvs=4)
+- 3차 최적화: Task Executor 멀티스레드 적용, 병렬 실행
+- 4차 최적화: Partitioniing 적용
+#### 1.4 [✅ Spring Batch 성능 개선 기록](https://uttermost-band-f56.notion.site/Spring-Batch-89d7762014664bf9aae50d72676a143f?pvs=4)
 
 ### 2. 구조 최적화 및 동시성 제어
 #### 2.1 플랫폼 스레드 활용
 - 고성능 처리를 위한 최신 Java 플랫폼 스레드 기술 적용
 #### 2.2 Chunk 동시성 제어
 - 데이터 처리의 효율성 증대를 위한 Chunk 기반 동시성 관리
-
+  - 파티셔닝으로 중복 데이터 방지
 ### 3. 부하 분산
 #### 3.1 CQRS
 - CQRS 패턴 적용
