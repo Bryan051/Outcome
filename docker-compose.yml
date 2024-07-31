@@ -16,6 +16,7 @@ services:
       MYSQL_DATABASE: outcome
       MYSQL_USER: iri
       MYSQL_PASSWORD: 1234qwer
+      MYSQL_MAX_CONNECTIONS: 500
     volumes:
       - ./master/data:/var/lib/mysql
       - ./master/config:/etc/mysql/conf.d
@@ -35,6 +36,7 @@ services:
       MYSQL_DATABASE: outcome
       MYSQL_USER: iri
       MYSQL_PASSWORD: 1234qwer
+      MYSQL_MAX_CONNECTIONS: 500
     depends_on:
       - mysql-master
     volumes:

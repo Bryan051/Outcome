@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class ReadDataSourceConfig {
     }
 
     @Bean
-    public JpaTransactionManager readTransactionManager(
+    public PlatformTransactionManager readTransactionManager(
             @Qualifier("readEntityManagerFactory") EntityManagerFactory readEntityManagerFactory) {
         return new JpaTransactionManager(readEntityManagerFactory);
     }
