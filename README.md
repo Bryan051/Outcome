@@ -31,6 +31,7 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
 |3차 성능 개선|3천5백만|6분|40%
 |3-2차 개선|3천5백만|실패|-
 |4차 성능 개선|3천만|1분40초|86%
+| '' |6천만(3천만*2)|3분40초|
 #### 1.3 주요 개선
 - 1차 최적화: 구조 변경 시도 및 chunk 사이즈
 - 2차 최적화: N + 1 쿼리 최적화, userId, videoId, created_at 을 기준으로 데이터 인덱싱.
