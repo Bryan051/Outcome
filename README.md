@@ -37,7 +37,7 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
 - 2차 최적화: N + 1 쿼리 최적화, userId, videoId, created_at 을 기준으로 데이터 인덱싱.
 - 3차 최적화: Task Executor 멀티스레드 적용, 병렬 실행
 - 4차 최적화: Partitioniing 적용
-#### 1.4 [✅ Spring Batch 성능 개선 기록](https://uttermost-band-f56.notion.site/Spring-Batch-89d7762014664bf9aae50d72676a143f?pvs=4)
+#### 1.4 [📈 Spring Batch 성능 개선 기록](https://uttermost-band-f56.notion.site/Spring-Batch-89d7762014664bf9aae50d72676a143f?pvs=4)
 
 ### 2. 구조 최적화 및 동시성 제어
 #### 2.1 플랫폼 스레드 활용
@@ -62,13 +62,18 @@ Batch Link: [Outcome Batch](https://github.com/Bryan051/OutcomeBatch)
 
 ## 🚨 트러블 슈팅
 ### 1. 멀티스레드 성능개선과 문제점
-  - [ThreadPoolExecutor 고찰](https://uttermost-band-f56.notion.site/d0f326a7ccb348d1a3cd63867afb32ba?pvs=4)
-  - [Hikari CP 데드락](https://uttermost-band-f56.notion.site/Hikari-CP-9085c6e5349d4eaf8946c751e1dc8ae7?pvs=4)
-
-[프로젝트 전체 성능개선, 트러블 슈팅 모음 WIL](https://github.com/Bryan051/TIL/tree/main/OutcomeProject)
+  - PoolSize 와 QueueCapacity 최적화
+  - Rejection 예외, Shuntdown 시 task 유실 방지
+    - [📖 ThreadPoolExecutor 고찰](https://uttermost-band-f56.notion.site/d0f326a7ccb348d1a3cd63867afb32ba?pvs=4)
+    - [📖 Hikari CP 데드락](https://uttermost-band-f56.notion.site/Hikari-CP-9085c6e5349d4eaf8946c751e1dc8ae7?pvs=4)
+### 2. DB 데이터
+- Buffer pool and Memory, Connection Pool 등 데이터 삽입과 트랜잭션 등에 대한 트러블 관리.   
+[📖 프로젝트 전체 성능개선, 트러블 슈팅 모음 WIL](https://github.com/Bryan051/TIL/tree/main/OutcomeProject)
 
 ## 📚 기술적 의사결정
-[파티셔닝과 멀티스레딩](https://uttermost-band-f56.notion.site/a64e711d9bb943aba7da3538e972c511?pvs=4)
+### 파티셔닝과 멀티스레딩
+- Multi-threaded 는 동시적 접근 즉 concurrency 개념이라면 Partitioning 는 병렬접근 즉 parallel 개념으로, 배치프로그램 성능개선을 위한 다양한 시도.
+[📖 파티셔닝과 멀티스레딩](https://uttermost-band-f56.notion.site/a64e711d9bb943aba7da3538e972c511?pvs=4)
 
 ## 🔎 아키텍처
 
